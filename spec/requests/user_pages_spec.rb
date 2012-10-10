@@ -6,8 +6,7 @@ describe "User Pages" do
 
 	describe "index" do
 		before do
-			let (:user) { FactoryGirl.create(:user) }
-			
+			let(:user) { FactoryGirl.create(:user)}
 			before(:each) do
 				sign_in user
 				visit users_path
@@ -22,11 +21,7 @@ describe "User Pages" do
 				
 				it { should have_selector('div.pagination') }
 
-		      	it "should list each user" do
-       				User.paginate(page: 1).each do |user|
-         				 page.should have_selector('li', text: user.name)
-        			end
-        		end
+		      
 			end
 
 			describe "delete links" do
@@ -47,15 +42,11 @@ describe "User Pages" do
 			end
 		end
 
-		it "should list each user" do
-			User.all.each do |user|
-				page.should have_selector('li',text: user.name)
-			end
-		end
+
 	end
 
 
-	
+=begin	
 	describe "edit" do
 		let(:user) { FactoryGirl.create(:user) }
 		before do
@@ -103,12 +94,21 @@ describe "User Pages" do
 	end
 
 	describe "profile page" do
-		before {visit user_path(user)}
 
 		let(:user) { FactoryGirl.create(:user) }
+		let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo")}
+		let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar")}
+
+		before {visit user_path(user)}
 
 		it { should have_selector('h1', text:user.name)}
 		it { should have_selector('title',text: user.name)}
+
+		describe "micropost" do
+			it { should have_content(m1.content)}
+			it { should have_content(m2.content)}
+			it { should have_content(user.micropost.count)}
+		end
 	end
 
 	describe "signup" do
@@ -134,6 +134,6 @@ describe "User Pages" do
 		end
 	end
 
-
+=end
 
 end
